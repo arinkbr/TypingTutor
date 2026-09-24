@@ -75,6 +75,27 @@ public class App extends Application {
                 fifthRow
         );
 
+        Button nextButton = new Button("Next");
+
+        // Move to the next sentence and clear the previous response.
+        nextButton.setOnAction(event -> {
+            if (currentTextIndex < practiceTexts.length - 1) {
+                currentTextIndex++;
+
+                targetField.setText(practiceTexts[currentTextIndex]);
+                responseField.clear();
+
+                progressLabel.setText(
+                        (currentTextIndex + 1) + " of " + practiceTexts.length);
+            }
+
+            if (currentTextIndex == practiceTexts.length - 1) {
+                nextButton.setDisable(true);
+            }
+
+            responseField.requestFocus();
+        });
+
         // Arrange the controls vertically.
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
@@ -86,7 +107,8 @@ public class App extends Application {
                 responseLabel,
                 responseField,
                 keyLabel,
-                keyboard
+                keyboard,
+                nextButton
         );
 
         Scene scene = new Scene(root, 900, 550);
