@@ -10,15 +10,18 @@ import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-
-
+import java.util.HashMap;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
- * A program for practice typing.
+ * A program to practice typing.
  *
  * @author Arin Kabir
  */
 public class App extends Application {
+
+    private HashMap<KeyCode, Button> keyButtons = new HashMap<>();
 
     @Override
     public void start(Stage stage) {
@@ -35,6 +38,8 @@ public class App extends Application {
 
         TextField responseField = new TextField();
         responseField.setPromptText("Start typing here");
+
+        Label keyLabel = new Label("Key pressed: None");
 
         // Create the five rows of the virtual keyboard.
         HBox firstRow = createKeyboardRow(
@@ -65,10 +70,34 @@ public class App extends Application {
                 targetField,
                 responseLabel,
                 responseField,
+                keyLabel,
                 keyboard
         );
 
         Scene scene = new Scene(root, 900, 550);
+
+        // Highlight the matching button when a key is pressed.
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            Button button = keyButtons.get(event.getCode());
+
+            if (button != null) {
+                button.setStyle("-fx-background-color: lightblue;");
+                keyLabel.setText("Key pressed: " + button.getText());
+                keyLabel.setStyle("-fx-text-fill: black;");
+            } else {
+                keyLabel.setText("Not handled");
+                keyLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
+
+        // Restore the button's appearance when the key is released.
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            Button button = keyButtons.get(event.getCode());
+
+            if (button != null) {
+                button.setStyle("");
+            }
+        });
 
         stage.setTitle("Typing Tutor");
         stage.setScene(scene);
@@ -94,6 +123,9 @@ public class App extends Application {
             button.setPrefSize(45, 40);
             button.setFocusTraversable(false);
 
+            KeyCode code = getKeyCode(keyName);
+            keyButtons.put(code, button);
+
             if (keyName.equals("Backspace")) {
                 button.setPrefWidth(110);
             } else if (keyName.equals("Shift")) {
@@ -106,6 +138,43 @@ public class App extends Application {
         }
 
         return row;
+    }
+
+    /**
+     * Finds the physical key code for a virtual key.
+     *
+     * @param keyName the text on the button
+     * @return the matching key code
+     */
+    private KeyCode getKeyCode(String keyName) {
+        switch (keyName) {
+            case "`":
+                return KeyCode.BACK_QUOTE;
+            case "-":
+                return KeyCode.MINUS;
+            case "=":
+                return KeyCode.EQUALS;
+            case "[":
+                return KeyCode.OPEN_BRACKET;
+            case "]":
+                return KeyCode.CLOSE_BRACKET;
+            case "\\":
+                return KeyCode.BACK_SLASH;
+            case ";":
+                return KeyCode.SEMICOLON;
+            case "'":
+                return KeyCode.QUOTE;
+            case ",":
+                return KeyCode.COMMA;
+            case ".":
+                return KeyCode.PERIOD;
+            case "/":
+                return KeyCode.SLASH;
+            case "Backspace":
+                return KeyCode.BACK_SPACE;
+            default:
+                return KeyCode.getKeyCode(keyName);
+        }
     }
 
     public static void main(String[] args) {
