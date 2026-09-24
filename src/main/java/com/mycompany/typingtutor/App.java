@@ -23,6 +23,15 @@ public class App extends Application {
 
     private HashMap<KeyCode, Button> keyButtons = new HashMap<>();
 
+    private String[] practiceTexts = {
+        "Try typing this text. Do it as quickly and accurately as you can.",
+        "Next type another line of input data.",
+        "The quick brown fox jumps over the lazy dog.",
+        "Five big quacking zephyrs jolt my wax bed.",
+        "Sympathizing would fix Quaker objectives.",
+        "A large fawn jumped quickly over white zinc boxes."
+    };
+
     @Override
     public void start(Stage stage) {
         Label titleLabel = new Label("Typing Tutor");
@@ -30,8 +39,7 @@ public class App extends Application {
         Label instructionLabel = new Label(
                 "Type the following sentence:");
 
-        TextField targetField = new TextField(
-                "Try typing this text. Do it as quickly and accurately as you can.");
+        TextField targetField = new TextField(practiceTexts[0]);
         targetField.setEditable(false);
 
         Label responseLabel = new Label("Your response:");
