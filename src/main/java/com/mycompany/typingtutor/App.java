@@ -32,6 +32,8 @@ public class App extends Application {
         "A large fawn jumped quickly over white zinc boxes."
     };
 
+    private int currentTextIndex = 0;
+
     @Override
     public void start(Stage stage) {
         Label titleLabel = new Label("Typing Tutor");
@@ -39,7 +41,11 @@ public class App extends Application {
         Label instructionLabel = new Label(
                 "Type the following sentence:");
 
-        TextField targetField = new TextField(practiceTexts[0]);
+        Label progressLabel = new Label(
+                (currentTextIndex + 1) + " of " + practiceTexts.length);
+
+        TextField targetField = new TextField(
+                practiceTexts[currentTextIndex]);
         targetField.setEditable(false);
 
         Label responseLabel = new Label("Your response:");
@@ -75,6 +81,7 @@ public class App extends Application {
         root.getChildren().addAll(
                 titleLabel,
                 instructionLabel,
+                progressLabel,
                 targetField,
                 responseLabel,
                 responseField,
