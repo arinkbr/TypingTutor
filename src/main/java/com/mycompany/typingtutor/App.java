@@ -33,6 +33,8 @@ public class App extends Application {
     };
 
     private int currentTextIndex = 0;
+    private int correctCount = 0;
+    private int incorrectCount = 0;
 
     @Override
     public void start(Stage stage) {
@@ -54,6 +56,12 @@ public class App extends Application {
         responseField.setPromptText("Start typing here");
 
         Label keyLabel = new Label("Key pressed: None");
+
+        Label correctLabel = new Label("Correct: " + correctCount);
+        Label incorrectLabel = new Label("Incorrect: " + incorrectCount);
+
+        HBox scores = new HBox(20);
+        scores.getChildren().addAll(correctLabel, incorrectLabel);
 
         // Create the five rows of the virtual keyboard.
         HBox firstRow = createKeyboardRow(
@@ -133,11 +141,12 @@ public class App extends Application {
                 responseLabel,
                 responseField,
                 keyLabel,
+                scores,
                 keyboard,
                 navigation
         );
 
-        Scene scene = new Scene(root, 900, 550);
+        Scene scene = new Scene(root, 900, 600);
 
         // Highlight the matching button when a key is pressed.
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
