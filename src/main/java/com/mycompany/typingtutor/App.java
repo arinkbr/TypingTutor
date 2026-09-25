@@ -96,6 +96,32 @@ public class App extends Application {
             responseField.requestFocus();
         });
 
+        Button resetButton = new Button("Reset");
+
+        // Return to the first sentence and reset the current state.
+        resetButton.setOnAction(event -> {
+            currentTextIndex = 0;
+
+            targetField.setText(practiceTexts[currentTextIndex]);
+            responseField.clear();
+
+            progressLabel.setText(
+                    (currentTextIndex + 1) + " of " + practiceTexts.length);
+
+            keyLabel.setText("Key pressed: None");
+            keyLabel.setStyle("-fx-text-fill: black;");
+
+            for (Button button : keyButtons.values()) {
+                button.setStyle("");
+            }
+
+            nextButton.setDisable(false);
+            responseField.requestFocus();
+        });
+
+        HBox navigation = new HBox(10);
+        navigation.getChildren().addAll(nextButton, resetButton);
+
         // Arrange the controls vertically.
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
@@ -108,7 +134,7 @@ public class App extends Application {
                 responseField,
                 keyLabel,
                 keyboard,
-                nextButton
+                navigation
         );
 
         Scene scene = new Scene(root, 900, 550);
