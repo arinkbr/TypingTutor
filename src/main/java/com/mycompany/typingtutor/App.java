@@ -63,6 +63,28 @@ public class App extends Application {
         HBox scores = new HBox(20);
         scores.getChildren().addAll(correctLabel, incorrectLabel);
 
+        // Check characters before the text field inserts them.
+        responseField.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (event.isControlDown() || event.isMetaDown()) {
+                return;
+            }
+
+            String characters = event.getCharacter();
+            int position = responseField.getSelection().getStart();
+
+            for (int i = 0; i < characters.length(); i++) {
+                char typedCharacter = characters.charAt(i);
+
+                if (!Character.isISOControl(typedCharacter)) {
+                    countKeystroke(typedCharacter, position);
+                    position++;
+                }
+            }
+
+            correctLabel.setText("Correct: " + correctCount);
+            incorrectLabel.setText("Incorrect: " + incorrectCount);
+        });
+
         // Create the five rows of the virtual keyboard.
         HBox firstRow = createKeyboardRow(
                 "` 1 2 3 4 5 6 7 8 9 0 - = Backspace");
@@ -95,6 +117,11 @@ public class App extends Application {
 
                 progressLabel.setText(
                         (currentTextIndex + 1) + " of " + practiceTexts.length);
+
+                correctCount = 0;
+                incorrectCount = 0;
+                correctLabel.setText("Correct: " + correctCount);
+                incorrectLabel.setText("Incorrect: " + incorrectCount);
             }
 
             if (currentTextIndex == practiceTexts.length - 1) {
@@ -115,6 +142,11 @@ public class App extends Application {
 
             progressLabel.setText(
                     (currentTextIndex + 1) + " of " + practiceTexts.length);
+
+            correctCount = 0;
+            incorrectCount = 0;
+            correctLabel.setText("Correct: " + correctCount);
+            incorrectLabel.setText("Incorrect: " + incorrectCount);
 
             keyLabel.setText("Key pressed: None");
             keyLabel.setStyle("-fx-text-fill: black;");
@@ -176,6 +208,23 @@ public class App extends Application {
         stage.show();
 
         responseField.requestFocus();
+    }
+
+    /**
+     * Counts a typed character as correct or incorrect.
+     *
+     * @param typedCharacter the character entered by the user
+     * @param position the position where it will be inserted
+     */
+    private void countKeystroke(char typedCharacter, int position) {
+        String targetText = practiceTexts[currentTextIndex];
+
+        if (position < targetText.length()
+                && typedCharacter == targetText.charAt(position)) {
+            correctCount++;
+        } else {
+            incorrectCount++;
+        }
     }
 
     /**
